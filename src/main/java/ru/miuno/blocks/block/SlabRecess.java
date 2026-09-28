@@ -8,14 +8,21 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import ru.miuno.blocks.block_types.Horizontal;
+import ru.miuno.blocks.ShapeCache;
 
 public class SlabRecess extends Horizontal {
+	private static final ShapeCache OUTLINE_SHAPES = new ShapeCache(SlabRecess::createOutlineShape);
+
 	public SlabRecess(Settings settings) {
 		super(settings);
 	}
 
 	@Override
 	public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext ctx) {
+		return OUTLINE_SHAPES.get(state);
+	}
+
+	private static VoxelShape createOutlineShape(BlockState state) {
 		Direction dir = state.get(FACING);
 		switch(dir) {
 			case NORTH:

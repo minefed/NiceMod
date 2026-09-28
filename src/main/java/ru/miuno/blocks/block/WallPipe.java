@@ -8,14 +8,21 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import ru.miuno.blocks.block_types.WaterloggableRodBlock;
+import ru.miuno.blocks.ShapeCache;
 
 public class WallPipe extends WaterloggableRodBlock {
+	private static final ShapeCache OUTLINE_SHAPES = new ShapeCache(WallPipe::createOutlineShape);
+
 	public WallPipe(Settings settings) {
 		super(settings);
 	}
 
     @Override
     public VoxelShape getOutlineShape(BlockState blockState, BlockView view, BlockPos pos, ShapeContext context) {
+        return OUTLINE_SHAPES.get(blockState);
+    }
+
+    private static VoxelShape createOutlineShape(BlockState blockState) {
         Direction dir = blockState.get(FACING);
         return switch (dir) {
             case UP -> VoxelShapes.union(VoxelShapes.cuboid(0, 0, 0, 1, 0.5, 1), VoxelShapes.cuboid(0.3125, 0.5, 0.3125, 0.6875, 1, 0.6875));

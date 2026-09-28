@@ -9,14 +9,21 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import ru.miuno.blocks.block_types.Horizontal;
+import ru.miuno.blocks.ShapeCache;
 
 public class WallLanternA extends Horizontal {
+    private static final ShapeCache OUTLINE_SHAPES = new ShapeCache(WallLanternA::createOutlineShape);
+
     public WallLanternA(Settings settings) {
         super(settings);
     }
 
 	@Override
 	public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext ctx) {
+		return OUTLINE_SHAPES.get(state);
+	}
+
+	private static VoxelShape createOutlineShape(BlockState state) {
 		Direction dir = state.get(FACING);
 		return switch (dir) {
 			case NORTH -> VoxelShapes.union(Block.createCuboidShape(5, 0, 5, 11, 13, 11), Block.createCuboidShape(-8, 13, 5, 24, 16, 11));

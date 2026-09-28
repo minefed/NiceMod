@@ -8,14 +8,21 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import ru.miuno.blocks.ShapeCache;
 
 public class Weathercock extends LightningRodBlock {
+	private static final ShapeCache OUTLINE_SHAPES = new ShapeCache(Weathercock::createOutlineShape);
+
 	public Weathercock(Settings settings) {
 		super(settings);
 	}
 
     @Override
     public VoxelShape getOutlineShape(BlockState blockState, BlockView view, BlockPos pos, ShapeContext context) {
+        return OUTLINE_SHAPES.get(blockState);
+    }
+
+    private static VoxelShape createOutlineShape(BlockState blockState) {
         Direction dir = blockState.get(FACING);
         return switch (dir) {
             case UP -> VoxelShapes.cuboid(0.25, 0, 0.25, 0.75, 1, 0.75);

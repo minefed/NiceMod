@@ -9,14 +9,21 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import ru.miuno.blocks.block_types.Pillar;
+import ru.miuno.blocks.ShapeCache;
 
 public class Hole extends Pillar {
+    private static final ShapeCache OUTLINE_SHAPES = new ShapeCache(Hole::createOutlineShape);
+
     public Hole(AbstractBlock.Settings settings) {
         super(settings);
     }
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return OUTLINE_SHAPES.get(state);
+    }
+
+    private static VoxelShape createOutlineShape(BlockState state) {
         switch ((Direction.Axis)state.get(AXIS)) {
             default: {
                 return VoxelShapes.union(VoxelShapes.cuboid(0, 0, 0, 1, 0.25, 1), VoxelShapes.cuboid(0, 0.75, 0, 1, 1, 1), VoxelShapes.cuboid(0, 0, 0, 1, 1, 0.25), VoxelShapes.cuboid(0, 0, 0.75, 1, 1, 1));

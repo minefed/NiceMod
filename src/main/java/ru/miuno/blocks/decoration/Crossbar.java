@@ -9,14 +9,21 @@ import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import ru.miuno.blocks.block_types.PillarHalf;
+import ru.miuno.blocks.ShapeCache;
 
 public class Crossbar extends PillarHalf {
+    private static final ShapeCache OUTLINE_SHAPES = new ShapeCache(Crossbar::createOutlineShape);
+
     public Crossbar(Settings settings) {
         super(settings);
     }
 
     @Override
 	public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext ctx) {
+		return OUTLINE_SHAPES.get(state);
+	}
+
+	private static VoxelShape createOutlineShape(BlockState state) {
 		Axis dir = state.get(AXIS);
         if (state.get(HALF) == BlockHalf.BOTTOM) {
             return switch (dir) {

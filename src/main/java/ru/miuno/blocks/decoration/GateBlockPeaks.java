@@ -9,14 +9,21 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import ru.miuno.blocks.block_types.HorizontalHalf;
+import ru.miuno.blocks.ShapeCache;
 
 public class GateBlockPeaks extends HorizontalHalf {
+    private static final ShapeCache OUTLINE_SHAPES = new ShapeCache(GateBlockPeaks::createOutlineShape);
+
     public GateBlockPeaks(Settings settings) {
         super(settings);
     }
     
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return OUTLINE_SHAPES.get(state);
+    }
+
+    private static VoxelShape createOutlineShape(BlockState state) {
         Direction dir = state.get(FACING);
         if (state.get(HALF) == BlockHalf.BOTTOM) {
 			return switch (dir) {

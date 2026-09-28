@@ -13,8 +13,11 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import ru.miuno.NiceMod;
+import ru.miuno.blocks.ShapeCache;
 
 public class Bell extends Block {
+    private static final ShapeCache OUTLINE_SHAPES = new ShapeCache(Bell::createOutlineShape);
+
     public Bell(Settings settings) {
         super(settings);
     }
@@ -26,6 +29,10 @@ public class Bell extends Block {
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return OUTLINE_SHAPES.get(state);
+    }
+
+    private static VoxelShape createOutlineShape(BlockState state) {
         return Block.createCuboidShape(6, 0, 6, 10, 3, 10);
     }
     

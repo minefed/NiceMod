@@ -8,8 +8,11 @@ import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import ru.miuno.blocks.block_types.Pillar;
+import ru.miuno.blocks.ShapeCache;
 
 public class Column extends Pillar {
+    private static final ShapeCache OUTLINE_SHAPES = new ShapeCache(Column::createOutlineShape);
+
     public Column(Settings settings) {
         super(settings);
     }
@@ -29,6 +32,10 @@ public class Column extends Pillar {
     }*/
 	@Override
 	public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext ctx) {
+		return OUTLINE_SHAPES.get(state);
+	}
+
+	private static VoxelShape createOutlineShape(BlockState state) {
 		Axis dir = state.get(AXIS);
 		return switch (dir) {
 			case X -> Block.createCuboidShape(0, 2, 2, 16, 14, 14);

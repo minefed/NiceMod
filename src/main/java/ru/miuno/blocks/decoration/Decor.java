@@ -9,14 +9,21 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import ru.miuno.blocks.block_types.Horizontal;
+import ru.miuno.blocks.ShapeCache;
 
 public class Decor extends Horizontal{
+    private static final ShapeCache OUTLINE_SHAPES = new ShapeCache(Decor::createOutlineShape);
+
     public Decor(Settings settings) {
         super(Settings.copy(Blocks.OAK_PLANKS).nonOpaque());
     }
 
 	@Override
 	public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext ctx) {
+		return OUTLINE_SHAPES.get(state);
+	}
+
+	private static VoxelShape createOutlineShape(BlockState state) {
 		Direction dir = state.get(FACING);
 		return switch (dir) {
 			case NORTH -> Block.createCuboidShape(2, 0, 2, 14, 16, 14);
