@@ -8,6 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import ru.miuno.blocks.ShapeCache;
 
 public class WoodWall extends FenceBlock {
     VoxelShape POST_SHAPE = Block.createCuboidShape(4.0F, 0.0F, 4.0F, 12.0F, 16.0F, 12.0F);
@@ -15,6 +16,7 @@ public class WoodWall extends FenceBlock {
     VoxelShape EAST_SHAPE = Block.createCuboidShape(4.0F, 0.0F, 4.0F, 16.0F, 16.0F, 12.0F);
     VoxelShape SOUTH_SHAPE = Block.createCuboidShape(4.0F, 0.0F, 4.0F, 12.0F, 16.0F, 16.0F);
     VoxelShape WEST_SHAPE = Block.createCuboidShape(0.0F, 0.0F, 4.0F, 12.0F, 16.0F, 12.0F);
+    private final ShapeCache shapes = new ShapeCache(state -> makebuildShapes(state, POST_SHAPE, NORTH_SHAPE, EAST_SHAPE, SOUTH_SHAPE, WEST_SHAPE));
 
     public WoodWall(Settings settings) {
         super(settings);
@@ -39,14 +41,10 @@ public class WoodWall extends FenceBlock {
 
 
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        VoxelShape shape;
-        shape = makebuildShapes(state, POST_SHAPE, NORTH_SHAPE, EAST_SHAPE, SOUTH_SHAPE, WEST_SHAPE);
-        return shape;
+        return shapes.get(state);
     }
 
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        VoxelShape shape;
-        shape = makebuildShapes(state, POST_SHAPE, NORTH_SHAPE, EAST_SHAPE, SOUTH_SHAPE, WEST_SHAPE);
-        return shape;
+        return shapes.get(state);
     }
 }

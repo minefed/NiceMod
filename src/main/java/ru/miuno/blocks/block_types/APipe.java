@@ -27,6 +27,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import ru.miuno.blocks.ShapeCache;
 
 @SuppressWarnings("deprecation")
 public abstract class APipe extends Block implements Waterloggable {
@@ -40,6 +41,7 @@ public abstract class APipe extends Block implements Waterloggable {
     public static final DirectionProperty FACING = DirectionProperty.of("facing");
     public static final Map<Direction, BooleanProperty> CONNECTIONS = new HashMap<>();
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+    private final ShapeCache outlineShapes = new ShapeCache(this::createOutlineShape);
 
     public APipe(Settings settings) {
         super(settings);
@@ -111,6 +113,10 @@ public abstract class APipe extends Block implements Waterloggable {
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext ctx) {
+        return outlineShapes.get(state);
+    }
+
+    private VoxelShape createOutlineShape(BlockState state) {
         VoxelShape shape = CORE_SHAPE;
         VoxelShape shape2 = CORE_SHAPE;
         for (Direction dir : Direction.values()) {
